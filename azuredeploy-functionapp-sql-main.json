@@ -348,9 +348,6 @@
             "objectId": {
               "value": "[parameters('objectId')]"
             },
-            "sqlAdministratorLoginPassword": {
-              "value": "[parameters('sqlAdministratorLoginPassword')]"
-            },
             "enabledForTemplateDeployment": {
               "value": true
             },
