@@ -353,7 +353,15 @@
             },
             "enabledForTemplateDeployment": {
               "value": true
-            }
+            },
+            "secretsObject": {
+              "secrets": [
+                {
+                  "secretName": "rkfunctionappdbpassword",
+                  "secretValue": "abc"
+               }
+              ]
+            }  
         }
       }
     }
