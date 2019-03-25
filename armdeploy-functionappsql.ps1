@@ -1,4 +1,3 @@
-$credential = Get-PSCred -UserName rsx79@hotmail.com -Message 'pword'
 Connect-AzureRmAccount
 Get-AzureRmContext
 
