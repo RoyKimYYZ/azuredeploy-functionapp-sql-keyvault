@@ -355,12 +355,14 @@
               "value": true
             },
             "secretsObject": {
-              "secrets": [
-                {
-                  "secretName": "rkfunctionappdbpassword",
-                  "secretValue": "abc"
-               }
-              ]
+              "value": {
+                "secrets": [
+                  {
+                    "secretName": "rkfunctionappdbpassword",
+                    "secretValue": "abc"
+                  }
+                ]
+              }
             }  
         }
       }
