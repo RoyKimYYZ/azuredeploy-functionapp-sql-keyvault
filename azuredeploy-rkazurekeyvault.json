@@ -98,7 +98,7 @@
               "secrets": [
                 {
                   "secretName": "rkfunctionappdbpassword",
-                  "secretValue": "[parameters('sqlAdministratorLoginPassword')]"
+                  "secretValue": "agb"
                 }
               ]
             },
