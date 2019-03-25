@@ -1,0 +1,36 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appPlan-name": {
+      "value": "FunctionAppPlan"
+    },
+    "appPlan-skuName": {
+      "value": "S1"
+    },
+    "webAppName": {
+      "value": "rkfunction"
+    },
+    "customHostname": {
+      "value": "www.rkfunction.com"
+    },
+    "sqlserver-name": {
+      "value": "rkfunctionsqlserver"
+    },
+    "sqldatabase-name": {
+      "value": "rkfunctiondb"
+    },
+    "sqlAdministratorLogin": {
+      "value": "sqladmin"
+    },
+    "sqlAdministratorLoginPassword": {
+      "value": "Password007"
+    },
+    "keyVaultName": {
+      "value":  "rkfunctionapp-keyvault"
+    },
+    "objectId": {
+      "value": "0f860f76-313b-4eb2-8912-a06b9e834a73"
+    }
+  }
+}
