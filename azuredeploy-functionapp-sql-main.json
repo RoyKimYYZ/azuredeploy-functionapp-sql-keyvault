@@ -213,7 +213,6 @@
       },
       "apiVersion": "2014-04-01",
       "dependsOn": [
-        "[variables('keyvaultName')]"
       ],
       "properties": {
         "administratorLogin": "[parameters('sqlAdministratorLogin')]",
