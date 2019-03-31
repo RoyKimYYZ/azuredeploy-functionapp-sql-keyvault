@@ -8,7 +8,6 @@ Select-AzureRmSubscription -SubscriptionName "Visual Studio Enterprise"
 
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -Scope Process
 
-
 #### Api-version
 ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).ApiVersions
 (Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Out-GridView
