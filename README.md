@@ -6,3 +6,5 @@ ARM Template to support the deployment of
 * Azure Key vault storing the Azure DB admin password
 
 Azure Key vault is deployed through a linked template.
+
+The samples folder contains arm template samples from other public github repos used for reference. 
