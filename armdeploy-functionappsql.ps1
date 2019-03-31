@@ -1,4 +1,3 @@
-Enable-AzAlias
 Import-Module Az
 
 Connect-AzAccount
