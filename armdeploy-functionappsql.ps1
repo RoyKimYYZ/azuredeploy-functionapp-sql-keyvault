@@ -1,4 +1,7 @@
-Connect-AzureRmAccount
+Enable-AzureRmAlias
+Import-Module Az
+
+Connect-AzAccount
 Get-AzureRmContext
 
 Select-AzureRmSubscription -SubscriptionName "Visual Studio Enterprise"
@@ -24,6 +27,12 @@ New-AzureRmResourceGroup -Name $resourceGroupName  -Location "Canada Central" -F
 
 $resourceGroupDeployment = New-AzureRmResourceGroupDeployment -Name $resourceGroupName'Deployment' -ResourceGroupName $resourceGroupName `
 -TemplateFile .\\arm-functionapp-sql-main.json -TemplateParameterFile .\armdeploy-functionappsql.paramaters.json -DeploymentDebugLogLevel All -Mode Complete -Force
+
+$resourceGroupDeployment = New-AzResourceGroupDeployment -Name $resourceGroupName'Deployment' -ResourceGroupName $resourceGroupName `
+-TemplateUri 'https://raw.githubusercontent.com/RoyKimYYZ/azuredeploy-functionapp-sql-keyvault/master/azuredeploy-functionapp-sql-main.json' `
+-TemplateParameterUri 'https://raw.githubusercontent.com/RoyKimYYZ/azuredeploy-functionapp-sql-keyvault/master/azuredeploy-functionappsql.paramaters.json' `
+-DeploymentDebugLogLevel All -Mode Complete -Force
+
 
 
 
