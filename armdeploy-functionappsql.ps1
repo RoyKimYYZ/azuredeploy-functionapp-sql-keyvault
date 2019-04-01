@@ -33,5 +33,3 @@ $resourceGroupDeployment = New-AzResourceGroupDeployment -Name $resourceGroupNam
 -DeploymentDebugLogLevel All -Mode Complete -Force
 
 
-
-
