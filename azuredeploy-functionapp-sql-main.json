@@ -225,7 +225,7 @@
       "administratorLoginPassword": {
         "reference": {
           "keyVault": {
-              "id": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              "id": "/subscriptions/2dac1c43-b88c-412f-8b6c-89295fe465de/resourceGroups/rkfunctionapp-sql/providers/Microsoft.KeyVault/vaults/rkfunctionapp-keyvault"
           },
           "secretName": "[variables('dbpasswordsecretName')]"
         }
