@@ -1,391 +1,404 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-  "parameters": {
-    "appPlan-name": {
-      "type": "string",
-      "metadata": {
-        "description": "App service hosting plan name."
-      },
-      "defaultValue": "rkAppServicePlan",
-      "maxLength": "20"
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+"parameters": {
+  "appPlan-name": {
+    "type": "string",
+    "metadata": {
+      "description": "App service hosting plan name."
     },
-    "appPlan-skuName": {
-      "type": "string",
-      "defaultValue": "S1",
-      "allowedValues": [
-        "B1",
-        "B2",
-        "B3",
-        "S1",
-        "S2",
-        "S3",
-        "P1",
-        "P2",
-        "P3",
-        "P4"
-      ],
-      "metadata": {
-        "description": "Describes plan's pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
-      }
-    },
-    "appPlan-skuCapacity": {
-      "type": "int",
-      "defaultValue": 1,
-      "minValue": 1,
-      "metadata": {
-        "description": "The app service plan's instance count"
-      }
-    },
-    "webAppName": {
-      "type": "string",
-      "defaultValue": "rkfunction",
-      "metadata": {
-        "description": "Name of the azure app service. Default url will be <app name>.azurewebsites.net. Therefore, URL needs to be globally unique."
-      },
-      "maxLength": 20
-    },
-    "customHostname": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Optional. The custom hostname that you wish to add. Prequisite. Need to verify domain ownership via DNS records. https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain#map-your-domain. Leave blank to configure afterwards."
-      }
-    },
-    "repoURL": {
-      "type": "string",
-      "defaultValue": "https://github.com/RoyKimYYZ/rkFunctionApp.git",
-      "metadata": {
-        "description": "The URL for the GitHub repository that contains the project to deploy."
-      }
-    },
-    "branch": {
-      "type": "string",
-      "defaultValue": "master",
-      "metadata": {
-        "description": "The branch of the GitHub repository to use."
-      }
-    },
-    "sqlserver-name": {
-      "type": "string",
-      "metadata": {
-        "description": "Azure SQL Server name. Must be globally unique."
-      }
-    },
-    "sqldatabase-name": {
-      "type": "string",
-      "metadata": {
-        "description": "Azure SQL database name."
-      }
-    },
-    "sqlAdministratorLogin": {
-      "type": "string",
-      "metadata": {
-        "description": "The admin user of the SQL Server"
-      }
-    },
-    "sqlAdministratorLoginPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "The password of the admin user of the SQL Server"
-      }
-    },
-    "location": {
-      "type": "string",
-      "defaultValue": "Canada Central",
-      "metadata": {
-        "description": "Location for all resources."
-      }
-    },
-    "keyVaultName": {
-      "type": "string",
-      "defaultValue": "rkfunctionapp-keyvault",
-      "metadata": {
-        "description": "Specifies the name of the key vault."
-      }
-    },
-    "enabledForDeployment": {
-      "type": "bool",
-      "defaultValue": false,
-      "allowedValues": [
-        true,
-        false
-      ],
-      "metadata": {
-        "description": "Specifies whether Azure Virtual Machines are permitted to retrieve certificates stored as secrets from the key vault."
-      }
-    },
-    "enabledForDiskEncryption": {
-      "type": "bool",
-      "defaultValue": false,
-      "allowedValues": [
-        true,
-        false
-      ],
-      "metadata": {
-        "description": "Specifies whether Azure Disk Encryption is permitted to retrieve secrets from the vault and unwrap keys."
-      }
-    },
-    "enabledForTemplateDeployment": {
-      "type": "bool",
-      "defaultValue": false,
-      "allowedValues": [
-        true,
-        false
-      ],
-      "metadata": {
-        "description": "Specifies whether Azure Resource Manager is permitted to retrieve secrets from the key vault."
-      }
-    },
-    "tenantId": {
-      "type": "string",
-      "defaultValue": "[subscription().tenantId]",
-      "metadata": {
-        "description": "Specifies the Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. Get it by using Get-AzSubscription cmdlet."
-      }
-    },
-    "objectId": {
-      "type": "string",
-      "defaultValue": "alksdfjalskdjfalsdfds",
-      "metadata": {
-        "description": "Specifies the object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. Get it by using Get-AzADUser or Get-AzADServicePrincipal cmdlets."
-      }
-    },
-    "keysPermissions": {
-      "type": "array",
-      "defaultValue": [
-        "list"
-      ],
-      "metadata": {
-        "description": "Specifies the permissions to keys in the vault. Valid values are: all, encrypt, decrypt, wrapKey, unwrapKey, sign, verify, get, list, create, update, import, delete, backup, restore, recover, and purge."
-      }
-    },
-    "secretsPermissions": {
-      "type": "array",
-      "defaultValue": [
-        "list"
-      ],
-      "metadata": {
-        "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
-      }
-    },
-    "skuName": {
-      "type": "string",
-      "defaultValue": "Standard",
-      "allowedValues": [
-        "Standard",
-        "Premium"
-      ],
-      "metadata": {
-        "description": "Specifies whether the key vault is a standard vault or a premium vault."
-      }
-    },
-    "secretsObject": {
-      "type": "secureObject",
-      "defaultValue": {
-        "secrets": [
-          {
-            "secretName": "rkfunctionappdbpassword",
-            "secretValue": "defaultPword"
-          }
-        ]
-      },
-      "metadata": {
-        "description": "Specifies all secrets {\"secretName\":\"\",\"secretValue\":\"\"} wrapped in a secure object."
-      }
+    "defaultValue": "rkAppServicePlan",
+    "maxLength": "20"
+  },
+  "appPlan-skuName": {
+    "type": "string",
+    "defaultValue": "S1",
+    "allowedValues": [
+      "B1",
+      "B2",
+      "B3",
+      "S1",
+      "S2",
+      "S3",
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "metadata": {
+      "description": "Describes plan's pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
     }
   },
-    "variables": {
-      "hostingPlanName": "[concat(parameters('appPlan-name'),'-', uniqueString(resourceGroup().id))]",
-      "webSiteName": "[concat(parameters('webAppName'), '-', uniqueString(resourceGroup().id))]",
-      "sqlserverName": "[concat(parameters('sqlserver-name'), '-', uniqueString(resourceGroup().id))]",
-      "databaseName": "[concat(parameters('sqldatabase-name'))]",
-      "keyvaultName": "[concat(parameters('keyVaultName'))]",
-      "SQLconnectionstring":""
-    },
-  "resources": [
-    {
-      "type": "Microsoft.Sql/servers",
-      "name": "[variables('sqlserverName')]",
-      "location": "[parameters('location')]",
-      "tags": {
-        "displayName": "SqlServer"
-      },
-      "apiVersion": "2014-04-01",
-      "dependsOn": [
-      ],
-      "properties": {
-        "administratorLogin": "[parameters('sqlAdministratorLogin')]",
-        "administratorLoginPassword": "Password007",
-        "version": "12.0"
-      },
-      "resources": [
-        {
-          "name": "[variables('databaseName')]",
-          "type": "databases",
-          "location": "[parameters('location')]",
-          "tags": {
-            "displayName": "Database"
-          },
-          "apiVersion": "2015-01-01",
-          "dependsOn": [
-            "[variables('sqlserverName')]"
-          ],
-          "properties": {
-            "edition": "Basic",
-            "collation": "SQL_Latin1_General_CP1_CI_AS",
-            "maxSizeBytes": "1073741824",
-            "requestedServiceObjectiveName": "Basic"
-          }
-        },
-        {
-          "type": "firewallrules",
-          "apiVersion": "2014-04-01",
-          "dependsOn": [
-            "[variables('sqlserverName')]"
-          ],
-          "location": "[parameters('location')]",
-          "name": "AllowAllWindowsAzureIps",
-          "properties": {
-            "endIpAddress": "0.0.0.0",
-            "startIpAddress": "0.0.0.0"
-          }
-        }
-      ]
-    },
-    {
-      "apiVersion": "2016-03-01",
-      "name": "[variables('hostingPlanName')]",
-      "type": "Microsoft.Web/serverfarms",
-      "location": "[parameters('location')]",
-      "tags": {
-        "displayName": "HostingPlan"
-      },
-      "sku": {
-        "name": "[parameters('appPlan-skuName')]",
-        "capacity": "[parameters('appPlan-skuCapacity')]"
-      },
-      "properties": {
-        "name": "[variables('hostingPlanName')]"
-      }
-    },
-    {
-      "apiVersion": "2018-02-01",
-      "name": "[variables('webSiteName')]",
-      "type": "Microsoft.Web/sites",
-      "kind": "functionapp",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[variables('hostingPlanName')]"
-      ],
-      "identity": { "type": "SystemAssigned" },
-      "tags": {
-        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName')))]": "empty",
-        "displayName": "Website"
-      },
-      "properties": {
-        "name": "[variables('webSiteName')]",
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
-        "httpsOnly": true,
-        "siteConfig": {
-          "AlwaysOn": true,
-          "appSettings": [
-            {
-              "name": "FUNCTIONS_EXTENSION_VERSION",
-              "value": "~1"
-            },
-            {
-              "name": "DatabaseConnectionString",
-              "value": "[concat('Server=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
-            }
-          ]
-        }
-      },
-      "resources": [
-        {
-          "apiVersion": "2018-02-01",
-          "type": "config",
-          "name": "connectionstrings",
-          "dependsOn": [
-            "[variables('webSiteName')]"
-          ],
-          "properties": {
-            "DefaultConnection": {
-              "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';')]",
-              "type": "SQLAzure"
-            }
-          }
-        },
-        {
-          "apiVersion": "2015-08-01",
-          "name": "web",
-          "type": "sourcecontrols",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
-          ],
-          "properties": {
-            "RepoUrl": "[parameters('repoURL')]",
-            "branch": "[parameters('branch')]",
-            "IsManualIntegration": true
-          }
-        }
-      ]
-    },
-    {
-      "apiVersion": "2018-05-01",
-      "name": "linkedTemplate",
-      "type": "Microsoft.Resources/deployments",
-      "properties": {
-          "mode": "incremental",
-          "templateLink": {
-              "uri": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-rkazurekeyvault.json')]",
-              "contentVersion": "1.0.0.0"
-          },
-          "parameters": {
-            "keyVaultName": {
-              "value": "[variables('keyvaultName')]"
-            },
-            "objectId": {
-              "value": "[parameters('objectId')]"
-            },
-            "enabledForTemplateDeployment": {
-              "value": true
-            },
-            "secretsObject": {
-              "value": {
-                "secrets": [
-                  {
-                    "secretName": "rkfunctionappdbpassword",
-                    "secretValue": "abc"
-                  }
-                ]
-              }
-            }  
-        }
-      }
+  "appPlan-skuCapacity": {
+    "type": "int",
+    "defaultValue": 1,
+    "minValue": 1,
+    "metadata": {
+      "description": "The app service plan's instance count"
     }
-
-  ],
-    "outputs": {
-      "siteUri": {
-        "type": "string",
-        "value": "[reference(concat('Microsoft.Web/sites/', variables('webSiteName'))).hostnames[0]]"
+  },
+  "webAppName": {
+    "type": "string",
+    "defaultValue": "rkfunction",
+    "metadata": {
+      "description": "Name of the azure app service. Default url will be <app name>.azurewebsites.net. Therefore, URL needs to be globally unique."
+    },
+    "maxLength": 20
+  },
+  "customHostname": {
+    "type": "string",
+    "defaultValue": "",
+    "metadata": {
+      "description": "Optional. The custom hostname that you wish to add. Prequisite. Need to verify domain ownership via DNS records. https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain#map-your-domain. Leave blank to configure afterwards."
+    }
+  },
+  "repoURL": {
+    "type": "string",
+    "defaultValue": "https://github.com/RoyKimYYZ/rkFunctionApp.git",
+    "metadata": {
+      "description": "The URL for the GitHub repository that contains the project to deploy."
+    }
+  },
+  "branch": {
+    "type": "string",
+    "defaultValue": "master",
+    "metadata": {
+      "description": "The branch of the GitHub repository to use."
+    }
+  },
+  "sqlserver-name": {
+    "type": "string",
+    "metadata": {
+      "description": "Azure SQL Server name. Must be globally unique."
+    }
+  },
+  "sqldatabase-name": {
+    "type": "string",
+    "metadata": {
+      "description": "Azure SQL database name."
+    }
+  },
+  "sqlAdministratorLogin": {
+    "type": "string",
+    "metadata": {
+      "description": "The admin user of the SQL Server"
+    }
+  },
+  "sqlAdministratorLoginPassword": {
+    "type": "securestring",
+    "metadata": {
+      "description": "The password of the admin user of the SQL Server"
+    }
+  },
+  "location": {
+    "type": "string",
+    "defaultValue": "Canada Central",
+    "metadata": {
+      "description": "Location for all resources."
+    }
+  },
+  "keyVaultName": {
+    "type": "string",
+    "defaultValue": "rkfunctionapp-keyvault",
+    "metadata": {
+      "description": "Specifies the name of the key vault."
+    }
+  },
+  "enabledForDeployment": {
+    "type": "bool",
+    "defaultValue": false,
+    "allowedValues": [
+      true,
+      false
+    ],
+    "metadata": {
+      "description": "Specifies whether Azure Virtual Machines are permitted to retrieve certificates stored as secrets from the key vault."
+    }
+  },
+  "enabledForDiskEncryption": {
+    "type": "bool",
+    "defaultValue": false,
+    "allowedValues": [
+      true,
+      false
+    ],
+    "metadata": {
+      "description": "Specifies whether Azure Disk Encryption is permitted to retrieve secrets from the vault and unwrap keys."
+    }
+  },
+  "enabledForTemplateDeployment": {
+    "type": "bool",
+    "defaultValue": false,
+    "allowedValues": [
+      true,
+      false
+    ],
+    "metadata": {
+      "description": "Specifies whether Azure Resource Manager is permitted to retrieve secrets from the key vault."
+    }
+  },
+  "tenantId": {
+    "type": "string",
+    "defaultValue": "[subscription().tenantId]",
+    "metadata": {
+      "description": "Specifies the Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. Get it by using Get-AzSubscription cmdlet."
+    }
+  },
+  "objectId": {
+    "type": "string",
+    "defaultValue": "alksdfjalskdjfalsdfds",
+    "metadata": {
+      "description": "Specifies the object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. Get it by using Get-AzADUser or Get-AzADServicePrincipal cmdlets."
+    }
+  },
+  "keysPermissions": {
+    "type": "array",
+    "defaultValue": [
+      "list"
+    ],
+    "metadata": {
+      "description": "Specifies the permissions to keys in the vault. Valid values are: all, encrypt, decrypt, wrapKey, unwrapKey, sign, verify, get, list, create, update, import, delete, backup, restore, recover, and purge."
+    }
+  },
+  "secretsPermissions": {
+    "type": "array",
+    "defaultValue": [
+      "list"
+    ],
+    "metadata": {
+      "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
+    }
+  },
+  "skuName": {
+    "type": "string",
+    "defaultValue": "Standard",
+    "allowedValues": [
+      "Standard",
+      "Premium"
+    ],
+    "metadata": {
+      "description": "Specifies whether the key vault is a standard vault or a premium vault."
+    }
+  },
+  "dbpasswordsecretName": {
+    "type": "string",
+    "defaultValue": "rkfunctionappdbpassword"
+  },
+  "secretsObject": {
+    "type": "secureObject",
+    "defaultValue": {
+      "secrets": [
+        {
+          "secretName": "rkfunctionappdbpassword",
+          "secretValue": "defaultPword"
+        }
+      ]
+    },
+    "metadata": {
+      "description": "Specifies all secrets {\"secretName\":\"\",\"secretValue\":\"\"} wrapped in a secure object."
+    }
+  }
+},
+  "variables": {
+    "hostingPlanName": "[concat(parameters('appPlan-name'),'-', uniqueString(resourceGroup().id))]",
+    "webSiteName": "[concat(parameters('webAppName'), '-', uniqueString(resourceGroup().id))]",
+    "sqlserverName": "[concat(parameters('sqlserver-name'), '-', uniqueString(resourceGroup().id))]",
+    "databaseName": "[concat(parameters('sqldatabase-name'))]",
+    "keyvaultName": "[concat(parameters('keyVaultName'))]",
+    "dbpasswordsecretName": "rkfunctionappdbpassword",
+    "SQLconnectionstring":""
+  },
+"resources": [
+  {
+    "type": "Microsoft.Sql/servers",
+    "name": "[variables('sqlserverName')]",
+    "location": "[parameters('location')]",
+    "tags": {
+      "displayName": "SqlServer"
+    },
+    "apiVersion": "2014-04-01",
+    "dependsOn": [
+      "linkedTemplate-keyvault"
+    ],
+    "properties": {
+      "administratorLogin": "[parameters('sqlAdministratorLogin')]",
+      "administratorLoginPassword": {
+        "reference": {
+          "keyVault": {
+              "id": "[resourceId(subscription(), resourceGroup().name, 'Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+          },
+          "secretName": "[variables('dbpasswordsecretName')]"
+        }
       },
-      "sqlSvrFqdn": {
-        "type": "string",
-        "value": "[reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName]"
+      "version": "12.0"
+    },
+    "resources": [
+      {
+        "name": "[variables('databaseName')]",
+        "type": "databases",
+        "location": "[parameters('location')]",
+        "tags": {
+          "displayName": "Database"
+        },
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "[variables('sqlserverName')]"
+        ],
+        "properties": {
+          "edition": "Basic",
+          "collation": "SQL_Latin1_General_CP1_CI_AS",
+          "maxSizeBytes": "1073741824",
+          "requestedServiceObjectiveName": "Basic"
+        }
       },
-      "sqlSvrAdminPassword": {
-        "type":"securestring",
-        "value": "[parameters('sqlAdministratorLoginPassword')]"
+      {
+        "type": "firewallrules",
+        "apiVersion": "2014-04-01",
+        "dependsOn": [
+          "[variables('sqlserverName')]"
+        ],
+        "location": "[parameters('location')]",
+        "name": "AllowAllWindowsAzureIps",
+        "properties": {
+          "endIpAddress": "0.0.0.0",
+          "startIpAddress": "0.0.0.0"
+        }
+      }
+    ]
+  },
+  {
+    "apiVersion": "2016-03-01",
+    "name": "[variables('hostingPlanName')]",
+    "type": "Microsoft.Web/serverfarms",
+    "location": "[parameters('location')]",
+    "tags": {
+      "displayName": "HostingPlan"
+    },
+    "sku": {
+      "name": "[parameters('appPlan-skuName')]",
+      "capacity": "[parameters('appPlan-skuCapacity')]"
+    },
+    "properties": {
+      "name": "[variables('hostingPlanName')]"
+    }
+  },
+  {
+    "apiVersion": "2018-02-01",
+    "name": "[variables('webSiteName')]",
+    "type": "Microsoft.Web/sites",
+    "kind": "functionapp",
+    "location": "[parameters('location')]",
+    "dependsOn": [
+      "[variables('hostingPlanName')]"
+    ],
+    "identity": { "type": "SystemAssigned" },
+    "tags": {
+      "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName')))]": "empty",
+      "displayName": "Website"
+    },
+    "properties": {
+      "name": "[variables('webSiteName')]",
+      "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+      "httpsOnly": true,
+      "siteConfig": {
+        "AlwaysOn": true,
+        "appSettings": [
+          {
+            "name": "FUNCTIONS_EXTENSION_VERSION",
+            "value": "~1"
+          },
+          {
+            "name": "DatabaseConnectionString",
+            "value": "[concat('Server=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+          }
+        ]
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2018-02-01",
+        "type": "config",
+        "name": "connectionstrings",
+        "dependsOn": [
+          "[variables('webSiteName')]"
+        ],
+        "properties": {
+          "DefaultConnection": {
+            "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';')]",
+            "type": "SQLAzure"
+          }
+        }
       },
-      "sqlAdministratorLoginPassword": {
-        "type":"string",
-        "value": "[parameters('sqlAdministratorLoginPassword')]"
-      },
-      "resourceGroupName": {
-         "type": "string",
-        "value": "[resourceGroup().Name]"
+      {
+        "apiVersion": "2015-08-01",
+        "name": "web",
+        "type": "sourcecontrols",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
+        ],
+        "properties": {
+          "RepoUrl": "[parameters('repoURL')]",
+          "branch": "[parameters('branch')]",
+          "IsManualIntegration": true
+        }
+      }
+    ]
+  },
+  {
+    "apiVersion": "2018-05-01",
+    "name": "linkedTemplate-keyvault",
+    "type": "Microsoft.Resources/deployments",
+    "properties": {
+        "mode": "incremental",
+        "templateLink": {
+            "uri": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-rkazurekeyvault.json')]",
+            "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "keyVaultName": {
+            "value": "[variables('keyvaultName')]"
+          },
+          "objectId": {
+            "value": "[parameters('objectId')]"
+          },
+          "enabledForTemplateDeployment": {
+            "value": true
+          },
+          "secretsObject": {
+            "value": {
+              "secrets": [
+                {
+                  "secretName": "[variables('dbpasswordsecretName')]",
+                  "secretValue": "abc"
+                }
+              ]
+            }
+          }  
       }
     }
   }
+
+],
+  "outputs": {
+    "siteUri": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Web/sites/', variables('webSiteName'))).hostnames[0]]"
+    },
+    "sqlSvrFqdn": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName]"
+    },
+    "sqlSvrAdminPassword": {
+      "type":"securestring",
+      "value": "[parameters('sqlAdministratorLoginPassword')]"
+    },
+    "sqlAdministratorLoginPassword": {
+      "type":"string",
+      "value": "[parameters('sqlAdministratorLoginPassword')]"
+    },
+    "resourceGroupName": {
+       "type": "string",
+      "value": "[resourceGroup().Name]"
+    }
+  }
+}
