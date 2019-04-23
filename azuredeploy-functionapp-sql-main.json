@@ -234,7 +234,7 @@
                 "secrets": [
                   {
                     "secretName": "[variables('dbpasswordsecretName')]",
-                    "secretValue": "[parameters('sqlAdministratorLoginPassword')]"
+                    "secretValue": "Password01"
                   }
                 ]
               }
