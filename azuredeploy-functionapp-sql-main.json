@@ -266,7 +266,7 @@
           "sqlAdministratorLoginPassword": {
               "reference": {
                 "keyVault": {
-                    "id": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+                    "id": "[reference('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
                 },
                 "secretName": "[variables('dbpasswordsecretName')]"
               }
