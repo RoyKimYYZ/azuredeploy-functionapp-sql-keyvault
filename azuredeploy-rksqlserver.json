@@ -48,7 +48,6 @@
         },
         "apiVersion": "2014-04-01",
         "dependsOn": [
-          "linkedTemplate-keyvault"
         ],
         "properties": {
           "administratorLogin": "[parameters('sqlAdministratorLogin')]",

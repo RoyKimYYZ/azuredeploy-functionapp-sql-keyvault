@@ -213,6 +213,7 @@
     "apiVersion": "2018-05-01",
     "name": "linkedTemplate-sqlserver",
     "type": "Microsoft.Resources/deployments",
+    "dependsOn": ["linkedTemplate-keyvault"],
     "properties": {
         "mode": "incremental",
         "templateLink": {
