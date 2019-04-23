@@ -231,13 +231,11 @@
               "value": "[parameters('sqlAdministratorLogin')]"
           },
           "sqlAdministratorLoginPassword": {
-              "value": {
-                "reference": {
-                  "keyVault": {
-                      "id": "/subscriptions/2dac1c43-b88c-412f-8b6c-89295fe465de/resourceGroups/rkfunctionapp-sql/providers/Microsoft.KeyVault/vaults/secrets/rkfunctionapp-keyvault"
-                  },
-                  "secretName": "[variables('dbpasswordsecretName')]"
-                }
+              "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/2dac1c43-b88c-412f-8b6c-89295fe465de/resourceGroups/rkfunctionapp-sql/providers/Microsoft.KeyVault/vaults/secrets/rkfunctionapp-keyvault"
+                },
+                "secretName": "[variables('dbpasswordsecretName')]"
               }
           },
           "location": {
