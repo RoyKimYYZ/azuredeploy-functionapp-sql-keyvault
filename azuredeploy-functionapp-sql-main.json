@@ -209,7 +209,40 @@
     "SQLconnectionstring":""
   },
   "resources": [
-  {
+    {
+      "apiVersion": "2018-05-01",
+      "name": "linkedTemplate-keyvault",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+          "mode": "incremental",
+          "templateLink": {
+              "uri": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-rkazurekeyvault.json')]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "keyVaultName": {
+              "value": "[variables('keyvaultName')]"
+            },
+            "objectId": {
+              "value": "[parameters('objectId')]"
+            },
+            "enabledForTemplateDeployment": {
+              "value": true
+            },
+            "secretsObject": {
+              "value": {
+                "secrets": [
+                  {
+                    "secretName": "[variables('dbpasswordsecretName')]",
+                    "secretValue": "abc"
+                  }
+                ]
+              }
+            }  
+        }
+      }
+    },
+    {
     "apiVersion": "2018-05-01",
     "name": "linkedTemplate-sqlserver",
     "type": "Microsoft.Resources/deployments",
@@ -321,39 +354,6 @@
         }
       }
     ]
-  },
-  {
-    "apiVersion": "2018-05-01",
-    "name": "linkedTemplate-keyvault",
-    "type": "Microsoft.Resources/deployments",
-    "properties": {
-        "mode": "incremental",
-        "templateLink": {
-            "uri": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-rkazurekeyvault.json')]",
-            "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "keyVaultName": {
-            "value": "[variables('keyvaultName')]"
-          },
-          "objectId": {
-            "value": "[parameters('objectId')]"
-          },
-          "enabledForTemplateDeployment": {
-            "value": true
-          },
-          "secretsObject": {
-            "value": {
-              "secrets": [
-                {
-                  "secretName": "[variables('dbpasswordsecretName')]",
-                  "secretValue": "abc"
-                }
-              ]
-            }
-          }  
-      }
-    }
   }
 
 ],
