@@ -162,9 +162,9 @@
 
     ],
 	"outputs": {
-		"outputMessage": {
-			"value": "key vault",
-			"type" : "string"
+		"rkkeyvault": {
+			"value": "[reference(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')))]",
+			"type" : "object"
 		}
 	}
 }
