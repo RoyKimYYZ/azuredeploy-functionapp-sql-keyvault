@@ -1,0 +1,100 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": { 
+        "sqlserver-name": {
+            "type": "string",
+            "metadata": {
+            "description": "Azure SQL Server name. Must be globally unique."
+            }
+        },
+        "sqldatabase-name": {
+            "type": "string",
+            "metadata": {
+            "description": "Azure SQL database name."
+            }
+        },
+        "sqlAdministratorLogin": {
+            "type": "string",
+            "metadata": {
+            "description": "The admin user of the SQL Server"
+            }
+        },
+        "sqlAdministratorLoginPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password of the admin user of the SQL Server"
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "Canada Central",
+            "metadata": {
+              "description": "Location for all resources."
+            }
+          }
+    },
+	"variables": {
+        "sqlserverName": "[concat(parameters('sqlserver-name'), '-', uniqueString(resourceGroup().id))]",
+        "databaseName": "[concat(parameters('sqldatabase-name'))]",
+    },
+	"resources": [
+        {
+            "type": "Microsoft.Sql/servers",
+            "name": "[variables('sqlserverName')]",
+            "location": "[parameters('location')]",
+            "tags": {
+              "displayName": "SqlServer"
+            },
+            "apiVersion": "2014-04-01",
+            "dependsOn": [
+              "linkedTemplate-keyvault"
+            ],
+            "properties": {
+              "administratorLogin": "[parameters('sqlAdministratorLogin')]",
+              "administratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
+              "version": "12.0"
+            },
+            "resources": [
+              {
+                "name": "[variables('databaseName')]",
+                "type": "databases",
+                "location": "[parameters('location')]",
+                "tags": {
+                  "displayName": "Database"
+                },
+                "apiVersion": "2015-01-01",
+                "dependsOn": [
+                  "[variables('sqlserverName')]"
+                ],
+                "properties": {
+                  "edition": "Basic",
+                  "collation": "SQL_Latin1_General_CP1_CI_AS",
+                  "maxSizeBytes": "1073741824",
+                  "requestedServiceObjectiveName": "Basic"
+                }
+              },
+              {
+                "type": "firewallrules",
+                "apiVersion": "2014-04-01",
+                "dependsOn": [
+                  "[variables('sqlserverName')]"
+                ],
+                "location": "[parameters('location')]",
+                "name": "AllowAllWindowsAzureIps",
+                "properties": {
+                  "endIpAddress": "0.0.0.0",
+                  "startIpAddress": "0.0.0.0"
+                }
+              }
+            ]
+          }
+
+    ],
+	"outputs": {
+		"outputMessage": {
+			"value": "sql server",
+			"type" : "string"
+		}
+	}
+}

@@ -208,63 +208,42 @@
     "dbpasswordsecretName": "rkfunctionappdbpassword",
     "SQLconnectionstring":""
   },
-"resources": [
+  "resources": [
   {
-    "type": "Microsoft.Sql/servers",
-    "name": "[variables('sqlserverName')]",
-    "location": "[parameters('location')]",
-    "tags": {
-      "displayName": "SqlServer"
-    },
-    "apiVersion": "2014-04-01",
-    "dependsOn": [
-      "linkedTemplate-keyvault"
-    ],
+    "apiVersion": "2018-05-01",
+    "name": "linkedTemplate-sqlserver",
+    "type": "Microsoft.Resources/deployments",
     "properties": {
-      "administratorLogin": "[parameters('sqlAdministratorLogin')]",
-      "administratorLoginPassword": {
-        "reference": {
-          "keyVault": {
-              "id": "/subscriptions/2dac1c43-b88c-412f-8b6c-89295fe465de/resourceGroups/rkfunctionapp-sql/providers/Microsoft.KeyVault/vaults/rkfunctionapp-keyvault"
-          },
-          "secretName": "[variables('dbpasswordsecretName')]"
-        }
-      },
-      "version": "12.0"
-    },
-    "resources": [
-      {
-        "name": "[variables('databaseName')]",
-        "type": "databases",
-        "location": "[parameters('location')]",
-        "tags": {
-          "displayName": "Database"
+        "mode": "incremental",
+        "templateLink": {
+            "uri": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-rksqlserver.json')]",
+            "contentVersion": "1.0.0.0"
         },
-        "apiVersion": "2015-01-01",
-        "dependsOn": [
-          "[variables('sqlserverName')]"
-        ],
-        "properties": {
-          "edition": "Basic",
-          "collation": "SQL_Latin1_General_CP1_CI_AS",
-          "maxSizeBytes": "1073741824",
-          "requestedServiceObjectiveName": "Basic"
-        }
-      },
-      {
-        "type": "firewallrules",
-        "apiVersion": "2014-04-01",
-        "dependsOn": [
-          "[variables('sqlserverName')]"
-        ],
-        "location": "[parameters('location')]",
-        "name": "AllowAllWindowsAzureIps",
-        "properties": {
-          "endIpAddress": "0.0.0.0",
-          "startIpAddress": "0.0.0.0"
-        }
+        "parameters": {
+          "sqlserver-name": {
+            "value": "[parameters('sqlserver-name')]"
+        },
+        "sqldatabase-name": {
+          "value": "[parameters('sqldatabase-name')]"
+        },
+        "sqlAdministratorLogin": {
+            "value": "[parameters('sqlAdministratorLogin')]"
+        },
+        "sqlAdministratorLoginPassword": {
+            "value": {
+              "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/2dac1c43-b88c-412f-8b6c-89295fe465de/resourceGroups/rkfunctionapp-sql/providers/Microsoft.KeyVault/vaults/secrets/rkfunctionapp-keyvault"
+                },
+                "secretName": "[variables('dbpasswordsecretName')]"
+              }
+            }
+        },
+        "location": {
+          "value": "[parameters('location')]"
+        }  
       }
-    ]
+    }
   },
   {
     "apiVersion": "2016-03-01",

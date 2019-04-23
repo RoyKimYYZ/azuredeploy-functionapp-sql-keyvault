@@ -98,7 +98,7 @@
               "secrets": [
                 {
                   "secretName": "rkfunctionappdbpassword",
-                  "secretValue": "agb"
+                  "secretValue": "abc"
                 }
               ]
             },
@@ -162,8 +162,8 @@
 
     ],
 	"outputs": {
-		"greetingMessage": {
-			"value": "Hello World",
+		"outputMessage": {
+			"value": "key vault",
 			"type" : "string"
 		}
 	}
