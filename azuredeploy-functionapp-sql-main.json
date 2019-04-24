@@ -326,7 +326,7 @@
             "value": "[parameters('branch')]"
           },
           "hostingPlan": {
-            "value": "[reference('linkedTemplate-appserviceplan', 'Full').name]"
+            "value": "[reference('linkedTemplate-appserviceplan', '2016-03-01', 'Full').name]"
           },
           "location": {
             "value": "[parameters('location')]"
