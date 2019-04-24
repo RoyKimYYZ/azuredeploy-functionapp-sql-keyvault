@@ -200,7 +200,6 @@
   }
 },
   "variables": {
-    "hostingPlanName": "[concat(parameters('appPlan-name'),'-', uniqueString(resourceGroup().id))]",
     "webSiteName": "[concat(parameters('webAppName'), '-', uniqueString(resourceGroup().id))]",
     "sqlserverName": "[concat(parameters('sqlserver-name'), '-', uniqueString(resourceGroup().id))]",
     "databaseName": "[concat(parameters('sqldatabase-name'))]",
@@ -301,66 +300,36 @@
     }
   },
   {
-    "apiVersion": "2018-02-01",
-    "name": "[variables('webSiteName')]",
-    "type": "Microsoft.Web/sites",
-    "kind": "functionapp",
-    "location": "[parameters('location')]",
-    "dependsOn": [
-      "linkedTemplate-appserviceplan"
-    ],
-    "identity": { "type": "SystemAssigned" },
-    "tags": {
-      "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName')))]": "empty",
-      "displayName": "Website"
-    },
+    "apiVersion": "2018-05-01",
+    "name": "linkedTemplate-website",
+    "type": "Microsoft.Resources/deployments",
     "properties": {
-      "name": "[variables('webSiteName')]",
-      "serverFarmId": "[reference('linkedTemplate-appserviceplan').outputs.appserviceplan.value]",
-      "httpsOnly": true,
-      "siteConfig": {
-        "AlwaysOn": true,
-        "appSettings": [
-          {
-            "name": "FUNCTIONS_EXTENSION_VERSION",
-            "value": "~1"
+        "mode": "incremental",
+        "templateLink": {
+            "uri": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-website.json')]",
+            "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "webAppName": {
+            "value": "[parameters('webAppName')]"
           },
-          {
-            "name": "DatabaseConnectionString",
-            "value": "[concat('Server=tcp:', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ',1433;Initial Catalog=', variables('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), '@', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
-          }
-        ]
+          "customHostname": {
+            "value": "[parameters('customHostname')]"
+          },
+          "repoURL": {
+            "value": "[parameters('repoURL')]"
+          },
+          "branch": {
+            "value": "[parameters('branch')]"
+          },
+          "hostingPlan": {
+            "value": "[reference('linkedTemplate-appserviceplan', 'Full').name]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }  
       }
-    },
-    "resources": [
-      {
-        "apiVersion": "2018-02-01",
-        "type": "config",
-        "name": "connectionstrings",
-        "dependsOn": [
-          "[variables('webSiteName')]"
-        ],
-        "properties": {
-          "DefaultConnection": {
-            "value": "[concat('Data Source=tcp:', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ',1433;Initial Catalog=', variables('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ';Password=', parameters('sqlAdministratorLoginPassword'), ';')]",
-            "type": "SQLAzure"
-          }
-        }
-      },
-      {
-        "apiVersion": "2015-08-01",
-        "name": "web",
-        "type": "sourcecontrols",
-        "dependsOn": [
-          "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
-        ],
-        "properties": {
-          "RepoUrl": "[parameters('repoURL')]",
-          "branch": "[parameters('branch')]",
-          "IsManualIntegration": true
-        }
-      }
-    ]
+    }
   }
 
 ],

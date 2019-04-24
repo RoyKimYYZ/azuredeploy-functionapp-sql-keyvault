@@ -1,0 +1,116 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "webAppName": {
+            "type": "string",
+            "defaultValue": "rkfunction",
+            "metadata": {
+              "description": "Name of the azure app service. Default url will be <app name>.azurewebsites.net. Therefore, URL needs to be globally unique."
+            },
+            "maxLength": 20
+          },
+          "customHostname": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+              "description": "Optional. The custom hostname that you wish to add. Prequisite. Need to verify domain ownership via DNS records. https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain#map-your-domain. Leave blank to configure afterwards."
+            }
+          },
+          "repoURL": {
+            "type": "string",
+            "defaultValue": "https://github.com/RoyKimYYZ/rkFunctionApp.git",
+            "metadata": {
+              "description": "The URL for the GitHub repository that contains the project to deploy."
+            }
+          },
+          "branch": {
+            "type": "string",
+            "defaultValue": "master",
+            "metadata": {
+              "description": "The branch of the GitHub repository to use."
+            }
+          },
+            "location": {
+                "type": "string",
+                "defaultValue": "Canada Central",
+                "metadata": {
+                "description": "Location for all resources."
+                }
+            },
+            "hostingPlan": {
+                "type": "string",
+                "metadata": {
+                    "description": "Existing app service hosting plan name for this web site"
+                }
+            }
+    },
+    "variables": {
+        "webSiteName": "[concat(parameters('webAppName'), '-', uniqueString(resourceGroup().id))]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2018-02-01",
+            "name": "[variables('webSiteName')]",
+            "type": "Microsoft.Web/sites",
+            "kind": "functionapp",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+              "linkedTemplate-appserviceplan"
+            ],
+            "identity": { "type": "SystemAssigned" },
+            "tags": {
+              "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName')))]": "empty",
+              "displayName": "Website"
+            },
+            "properties": {
+              "name": "[variables('webSiteName')]",
+              "serverFarmId": "[reference('linkedTemplate-appserviceplan').outputs.appserviceplan.value]",
+              "httpsOnly": true,
+              "siteConfig": {
+                "AlwaysOn": true,
+                "appSettings": [
+                  {
+                    "name": "FUNCTIONS_EXTENSION_VERSION",
+                    "value": "~1"
+                  },
+                  {
+                    "name": "DatabaseConnectionString",
+                    "value": "[concat('Server=tcp:', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ',1433;Initial Catalog=', variables('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), '@', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+                  }
+                ]
+              }
+            },
+            "resources": [
+              {
+                "apiVersion": "2018-02-01",
+                "type": "config",
+                "name": "connectionstrings",
+                "dependsOn": [
+                  "[variables('webSiteName')]"
+                ],
+                "properties": {
+                  "DefaultConnection": {
+                    "value": "[concat('Data Source=tcp:', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ',1433;Initial Catalog=', variables('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ';Password=', parameters('sqlAdministratorLoginPassword'), ';')]",
+                    "type": "SQLAzure"
+                  }
+                }
+              },
+              {
+                "apiVersion": "2015-08-01",
+                "name": "web",
+                "type": "sourcecontrols",
+                "dependsOn": [
+                  "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
+                ],
+                "properties": {
+                  "RepoUrl": "[parameters('repoURL')]",
+                  "branch": "[parameters('branch')]",
+                  "IsManualIntegration": true
+                }
+              }
+            ]
+          }
+    ],
+    "outputs": {}
+}
