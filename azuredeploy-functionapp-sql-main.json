@@ -339,7 +339,7 @@
   "outputs": {
     "siteUri": {
       "type": "string",
-      "value": "[reference(concat('Microsoft.Web/sites/', variables('webSiteName'))).hostnames[0]]"
+      "value": "[reference('linkedTemplate-website').outputs.websiteId.value]"
     },
     "sqlSvrFqdn": {
       "type": "string",
