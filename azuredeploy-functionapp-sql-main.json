@@ -373,14 +373,6 @@
       "type": "string",
       "value": "[reference('linkedTemplate-sqlserver').outputs.dbfqdn.value]"
     },
-    "sqlSvrAdminPassword": {
-      "type":"securestring",
-      "value": "[parameters('sqlAdministratorLoginPassword')]"
-    },
-    "sqlAdministratorLoginPassword": {
-      "type":"string",
-      "value": "[parameters('sqlAdministratorLoginPassword')]"
-    },
     "resourceGroupName": {
        "type": "string",
       "value": "[resourceGroup().Name]"
