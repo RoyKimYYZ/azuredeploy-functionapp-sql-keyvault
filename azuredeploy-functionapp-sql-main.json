@@ -281,7 +281,6 @@
     "apiVersion": "2018-05-01",
     "name": "linkedTemplate-appserviceplan",
     "type": "Microsoft.Resources/deployments",
-    "dependsOn": ["linkedTemplate-keyvault"],
     "properties": {
         "mode": "incremental",
         "templateLink": {
