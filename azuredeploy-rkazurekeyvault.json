@@ -98,7 +98,7 @@
               "secrets": [
                 {
                   "secretName": "rkfunctionappdbpassword",
-                  "secretValue": "abc"
+                  "secretValue": "someStrongPassword"
                 }
               ]
             },

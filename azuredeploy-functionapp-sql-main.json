@@ -163,7 +163,7 @@
   "secretsPermissions": {
     "type": "array",
     "defaultValue": [
-      "list"
+      "list", "get"
     ],
     "metadata": {
       "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
@@ -278,21 +278,29 @@
     }
   },
   {
-    "apiVersion": "2016-03-01",
-    "name": "[variables('hostingPlanName')]",
-    "type": "Microsoft.Web/serverfarms",
-    "location": "[parameters('location')]",
-    "tags": {
-      "displayName": "HostingPlan"
-    },
-    "sku": {
-      "name": "[parameters('appPlan-skuName')]",
-      "capacity": "[parameters('appPlan-skuCapacity')]"
-    },
+    "apiVersion": "2018-05-01",
+    "name": "linkedTemplate-appserviceplan",
+    "type": "Microsoft.Resources/deployments",
+    "dependsOn": ["linkedTemplate-keyvault"],
     "properties": {
-      "name": "[variables('hostingPlanName')]"
+        "mode": "incremental",
+        "templateLink": {
+            "uri": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-appserviceplan.json')]",
+            "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "appPlan-skuName": {
+            "value": "[parameters('appPlan-skuName')]"
+          },
+          "appPlan-skuCapacity": {
+            "value": "[parameters('appPlan-skuCapacity')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }  
+      }
     }
-  },
+  }
   {
     "apiVersion": "2018-02-01",
     "name": "[variables('webSiteName')]",
