@@ -44,6 +44,37 @@
                 "metadata": {
                     "description": "Existing app service hosting plan name for this web site"
                 }
+            },
+            "dbfqdn": {
+                "type": "string",
+                "metadata": {
+                    "description": "Existing sql server fully qualified domain name"
+                }
+            },
+            "databaseName": {
+                "type": "string",
+                "metadata": {
+                    "description": "Existing database name"
+                }
+            },
+            "sqlAdministratorLogin": {
+                "type": "string",
+                "metadata": {
+                    "description": "Existing database sql admin login name"
+                }
+            },
+
+            "sqlAdministratorLoginPassword" : {
+                "type": "string",
+                "metadata": {
+                    "description": "Existing database sql admin password"
+                }
+            },
+            "appserviceplanId" : {
+                "type": "string",
+                "metadata": {
+                    "description": "Existing app service plan resource id"
+                }
             }
     },
     "variables": {
@@ -63,7 +94,7 @@
             },
             "properties": {
               "name": "[variables('webSiteName')]",
-              "serverFarmId": "[reference('linkedTemplate-appserviceplan').outputs.appserviceplan.value]",
+              "serverFarmId": "[parameters('appserviceplanId')]",
               "httpsOnly": true,
               "siteConfig": {
                 "AlwaysOn": true,
@@ -74,7 +105,7 @@
                   },
                   {
                     "name": "DatabaseConnectionString",
-                    "value": "[concat('Server=tcp:', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ',1433;Initial Catalog=', variables('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), '@', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+                    "value": "[concat('Server=tcp:', parameters('dbfqdn'),'1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), '@', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
                   }
                 ]
               }
@@ -89,7 +120,7 @@
                 ],
                 "properties": {
                   "DefaultConnection": {
-                    "value": "[concat('Data Source=tcp:', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ',1433;Initial Catalog=', variables('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ';Password=', parameters('sqlAdministratorLoginPassword'), ';')]",
+                    "value": "[concat('Data Source=tcp:', parameters('dbfqdn'), ';Password=', parameters('sqlAdministratorLoginPassword'), ';')]",
                     "type": "SQLAzure"
                   }
                 }
