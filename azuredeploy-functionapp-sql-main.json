@@ -304,7 +304,6 @@
     "name": "linkedTemplate-website",
     "type": "Microsoft.Resources/deployments",
     "dependsOn": [
-      "linkedTemplate-appserviceplan"
     ],
     "properties": {
         "mode": "incremental",
