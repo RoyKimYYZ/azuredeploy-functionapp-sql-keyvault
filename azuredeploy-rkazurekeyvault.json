@@ -163,7 +163,7 @@
     ],
 	"outputs": {
 		"rkkeyvault": {
-			"value": "[reference(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')))]",
+			"value": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
 			"type" : "string"
 		}
 	}
