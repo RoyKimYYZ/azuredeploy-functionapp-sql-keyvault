@@ -303,6 +303,9 @@
     "apiVersion": "2018-05-01",
     "name": "linkedTemplate-website",
     "type": "Microsoft.Resources/deployments",
+    "dependsOn": [
+      "linkedTemplate-appserviceplan"
+    ],
     "properties": {
         "mode": "incremental",
         "templateLink": {
