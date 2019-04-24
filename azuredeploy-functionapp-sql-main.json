@@ -316,7 +316,7 @@
     },
     "properties": {
       "name": "[variables('webSiteName')]",
-      "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+      "serverFarmId": "[reference('linkedTemplate-appserviceplan').outputs.appserviceplan.value]",
       "httpsOnly": true,
       "siteConfig": {
         "AlwaysOn": true,

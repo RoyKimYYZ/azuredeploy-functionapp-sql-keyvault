@@ -66,5 +66,10 @@
             }
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "appserviceplan": {
+			"value": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+			"type" : "string"
+		}
+    }
 }
