@@ -303,8 +303,7 @@
     "apiVersion": "2018-05-01",
     "name": "linkedTemplate-website",
     "type": "Microsoft.Resources/deployments",
-    "dependsOn": [
-    ],
+    "dependsOn": ["linkedTemplate-appserviceplan", "linkedTemplate-sqlserver"],
     "properties": {
         "mode": "incremental",
         "templateLink": {
@@ -333,7 +332,6 @@
           "databaseName": {
             "value": "[parameters('sqldatabase-name')]"
           },
-          
           "sqlAdministratorLogin": {
             "value": "[parameters('sqlAdministratorLogin')]"
           },
