@@ -326,7 +326,7 @@
             "value": "[parameters('branch')]"
           },
           "hostingPlan": {
-            "value": "[reference('linkedTemplate-appserviceplan', '2019-05-01', 'Full').name]"
+            "value": "[reference('linkedTemplate-appserviceplan', '2019-05-01', 'Full').properties.name]"
           },
           "location": {
             "value": "[parameters('location')]"
@@ -334,7 +334,6 @@
       }
     }
   }
-
 ],
   "outputs": {
     "siteUri": {
