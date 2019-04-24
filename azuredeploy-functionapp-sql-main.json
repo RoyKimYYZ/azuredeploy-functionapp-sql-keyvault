@@ -307,7 +307,7 @@
     "kind": "functionapp",
     "location": "[parameters('location')]",
     "dependsOn": [
-      "[variables('hostingPlanName')]"
+      "linkedTemplate-appserviceplan"
     ],
     "identity": { "type": "SystemAssigned" },
     "tags": {
