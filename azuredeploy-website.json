@@ -105,7 +105,7 @@
                   },
                   {
                     "name": "DatabaseConnectionString",
-                    "value": "[concat('Server=tcp:', parameters('dbfqdn'),'1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), '@', reference('linkedTemplate-sqlserver').outputs.dbfqdn.value, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+                    "value": "[concat('Server=tcp:', parameters('dbfqdn'),'1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), '@',  parameters('dbfqdn'), ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
                   }
                 ]
               }
