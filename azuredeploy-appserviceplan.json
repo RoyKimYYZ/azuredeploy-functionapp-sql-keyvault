@@ -70,6 +70,6 @@
         "appserviceplan": {
 			"value": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
 			"type" : "string"
-		}
+        }
     }
 }
