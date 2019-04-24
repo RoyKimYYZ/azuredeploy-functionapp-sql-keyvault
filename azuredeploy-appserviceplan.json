@@ -68,7 +68,7 @@
     ],
     "outputs": {
         "appserviceplan": {
-			"value": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+			"value": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
 			"type" : "string"
 		}
     }
