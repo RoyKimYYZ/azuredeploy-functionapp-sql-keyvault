@@ -266,7 +266,7 @@
           "sqlAdministratorLoginPassword": {
               "reference": {
                 "keyVault": {
-                    "id": "[reference('linktedTemplate-keyvault').outputs.rkkeyvault.value]" 
+                    "id": "[reference('linkedTemplate-keyvault').outputs.rkkeyvault.value]" 
                 },
                 "secretName": "[variables('dbpasswordsecretName')]"
               }
