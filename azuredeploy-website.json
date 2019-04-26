@@ -105,7 +105,7 @@
                   },
                   {
                     "name": "DatabaseConnectionString",
-                    "value": "[concat('Server=tcp:', parameters('dbfqdn'),'1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+                    "value": "[concat('Server=tcp:', parameters('dbfqdn'),',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
                   }
                 ]
               }
@@ -120,7 +120,7 @@
                 ],
                 "properties": {
                   "DefaultConnection": {
-                    "value": "[concat('Data Source=tcp:', parameters('dbfqdn'), ';Password=', parameters('sqlAdministratorLoginPassword'), ';')]",
+                    "value": "[concat('Server=tcp:', parameters('dbfqdn'),',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
                     "type": "SQLAzure"
                   }
                 }
