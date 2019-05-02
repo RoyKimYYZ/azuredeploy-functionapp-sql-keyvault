@@ -12,7 +12,7 @@
       "value": "rkfunction"
     },
     "customHostname": {
-      "value": "www.rkfunction.com"
+      "value": "rkfunction.rkim.ca"
     },
     "sqlserver-name": {
       "value": "rkfunctionsqlserver"

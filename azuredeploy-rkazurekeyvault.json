@@ -133,14 +133,14 @@
             }
             ],
             "sku": {
-            "name": "[parameters('skuName')]",
-            "family": "A"
+              "name": "[parameters('skuName')]",
+              "family": "A"
             },
             "networkAcls": {
-            "value": {
-                "defaultAction": "Allow",
-                "bypass": "AzureServices"
-            }
+              "value": {
+                  "defaultAction": "Allow",
+                  "bypass": "AzureServices"
+              }
             }
         }
         },
