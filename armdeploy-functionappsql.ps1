@@ -31,3 +31,6 @@ $resourceGroupDeployment = New-AzResourceGroupDeployment -Name $resourceGroupNam
 -TemplateUri 'https://raw.githubusercontent.com/RoyKimYYZ/azuredeploy-functionapp-sql-keyvault/master/azuredeploy-functionapp-sql-main.json' `
 -TemplateParameterUri 'https://raw.githubusercontent.com/RoyKimYYZ/azuredeploy-functionapp-sql-keyvault/master/azuredeploy-functionappsql.paramaters.json' `
 -DeploymentDebugLogLevel All -Mode Complete -Force
+
+
+Get-AzADUser -UserPrincipalName rsx79@hotamil.com
