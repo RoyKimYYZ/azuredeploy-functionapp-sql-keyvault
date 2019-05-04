@@ -110,7 +110,18 @@
                 ]
               }
             },
-            "resources": [
+          "resources": [
+              {
+                "apiVersion": "2015-08-01",
+                "name": "[concat(variables('websiteName'),'/',parameters('customHostname'))]",
+                "type": "Microsoft.Web/sites/hostNameBindings",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "domainId": null,
+                  "hostNameType": "Verified",
+                  "siteName": "parameters('websiteName')"
+                }
+              },
               {
                 "apiVersion": "2018-02-01",
                 "type": "config",
