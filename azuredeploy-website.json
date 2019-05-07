@@ -146,6 +146,7 @@
             "name": "[concat(variables('websiteName'),'/',parameters('customHostname'))]",
             "type": "Microsoft.Web/sites/hostNameBindings",
             "location": "[resourceGroup().location]",
+            "dependsOn": ["[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"],
             "properties": {
               "domainId": null,
               "hostNameType": "Verified",
