@@ -27,7 +27,7 @@
       "value": "Password007"
     },
     "keyVaultName": {
-      "value":  "rkfapp-keyvault"
+      "value":  "rk-keyvault"
     },
     "objectId": {
       "value": "0f860f76-313b-4eb2-8912-a06b9e834a73"
