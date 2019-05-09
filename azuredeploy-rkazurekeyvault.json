@@ -11,7 +11,7 @@
           },
           "keyVaultName": {
             "type": "string",
-            "defaultValue": "rkfapp-keyvault",
+            "defaultValue": "rkkv",
             "metadata": {
               "description": "Specifies the name of the key vault."
             }
