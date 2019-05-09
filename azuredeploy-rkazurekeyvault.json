@@ -107,11 +107,13 @@
             }
           }
     },
-	"variables": {},
+	"variables": {
+    "keyVaultName": "[concat(parameters('keyVaultName'), '-', uniqueString(resourceGroup().id))]"
+  },
 	"resources": [
         {
         "type": "Microsoft.KeyVault/vaults",
-        "name": "[parameters('keyVaultName')]",
+        "name": "[variables('keyVaultName')]",
         "location": "[parameters('location')]",
         "apiVersion": "2018-02-14",
         "tags": {
