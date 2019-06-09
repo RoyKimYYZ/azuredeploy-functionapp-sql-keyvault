@@ -2,98 +2,97 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "webAppName": {
-            "type": "string",
-            "defaultValue": "rkfunction",
-            "metadata": {
-              "description": "Name of the azure app service. Default url will be <app name>.azurewebsites.net. Therefore, URL needs to be globally unique."
-            },
-            "maxLength": 20
-          },
-          "customHostname": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-              "description": "Optional. The custom hostname that you wish to add. Prequisite. Need to verify domain ownership via DNS records. https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain#map-your-domain. Leave blank to configure afterwards."
-            }
-          },
-          "repoURL": {
-            "type": "string",
-            "defaultValue": "https://github.com/RoyKimYYZ/rkFunctionApp.git",
-            "metadata": {
-              "description": "The URL for the GitHub repository that contains the project to deploy."
-            }
-          },
-          "branch": {
-            "type": "string",
-            "defaultValue": "master",
-            "metadata": {
-              "description": "The branch of the GitHub repository to use."
-            }
-          },
-          "location": {
-              "type": "string",
-              "defaultValue": "Canada Central",
-              "metadata": {
-              "description": "Location for all resources."
-              }
-          },
-          "hostingPlan": {
-              "type": "string",
-              "defaultValue": "hostingPlanNameTBD",
-              "metadata": {
-                  "description": "Existing app service hosting plan name for this web site"
-              }
-          },
-          "appserviceplanId" : {
-              "type": "string",
-              "metadata": {
-                  "description": "Existing app service plan resource id"
-              }
-          },
-          "dbfqdn": {
-              "type": "string",
-              "metadata": {
-                  "description": "Existing sql server fully qualified domain name"
-              }
-          },
-          "databaseName": {
-              "type": "string",
-              "metadata": {
-                  "description": "Existing database name"
-              }
-          },
-          "sqlAdministratorLogin": {
-              "type": "string",
-              "metadata": {
-                  "description": "Existing database sql admin login name"
-              }
-          },
-          "sqlAdministratorLoginPassword" : {
-              "type": "string",
-              "metadata": {
-                  "description": "Existing database sql admin password"
-              }
-          },
-          "certificateName" : {
-            "type": "string",
-            "metadata": {
-                "description": "SSL certificate"
-            }
-          },
-          "existingKeyVaultId" : {
-            "type": "string",
-            "metadata": {
-                "description": "Pre-existing Key Vault for source certs and secrets. Not the key vault for this application solution."
-            }    
-          },
-          "existingKeyVaultSecretName" : {
-            "type": "string",
-            "metadata": {
-                "description": "Pre-existing Key Vault secret for source certs and secrets. Not the key vault for this application solution."
-            }    
-          }
+      "webAppName": {
+        "type": "string",
+        "defaultValue": "rkfunction",
+        "metadata": {
+          "description": "Name of the azure app service. Default url will be <app name>.azurewebsites.net. Therefore, URL needs to be globally unique."
+        },
+        "maxLength": 20
+      },
+      "customHostname": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Optional. The custom hostname that you wish to add. Prequisite. Need to verify domain ownership via DNS records. https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain#map-your-domain. Leave blank to configure afterwards."
         }
+      },
+      "repoURL": {
+        "type": "string",
+        "defaultValue": "https://github.com/RoyKimYYZ/rkFunctionApp.git",
+        "metadata": {
+          "description": "The URL for the GitHub repository that contains the project to deploy."
+        }
+      },
+      "branch": {
+        "type": "string",
+        "defaultValue": "master",
+        "metadata": {
+          "description": "The branch of the GitHub repository to use."
+        }
+      },
+      "location": {
+          "type": "string",
+          "defaultValue": "Canada Central",
+          "metadata": {
+          "description": "Location for all resources."
+          }
+      },
+      "hostingPlan": {
+          "type": "string",
+          "defaultValue": "hostingPlanNameTBD",
+          "metadata": {
+              "description": "Existing app service hosting plan name for this web site"
+          }
+      },
+      "appserviceplanId" : {
+          "type": "string",
+          "metadata": {
+              "description": "Existing app service plan resource id"
+          }
+      },
+      "dbfqdn": {
+          "type": "string",
+          "metadata": {
+              "description": "Existing sql server fully qualified domain name"
+          }
+      },
+      "databaseName": {
+          "type": "string",
+          "metadata": {
+              "description": "Existing database name"
+          }
+      },
+      "sqlAdministratorLogin": {
+          "type": "string",
+          "metadata": {
+              "description": "Existing database sql admin login name"
+          }
+      },
+      "sqlAdministratorLoginPassword" : {
+          "type": "string",
+          "metadata": {
+              "description": "Existing database sql admin password"
+          }
+      },
+      "certificateName" : {
+        "type": "string",
+        "metadata": {
+            "description": "SSL certificate"
+        }
+      },
+      "existingKeyVaultId" : {
+        "type": "string",
+        "metadata": {
+            "description": "Pre-existing Key Vault for source certs and secrets. Not the key vault for this application solution."
+        }    
+      },
+      "existingKeyVaultSecretName" : {
+        "type": "string",
+        "metadata": {
+            "description": "Pre-existing Key Vault secret for source certs and secrets. Not the key vault for this application solution."
+        }    
+      }
     },
     "variables": {
         "webSiteName": "[concat(parameters('webAppName'), '-', uniqueString(resourceGroup().id))]"
