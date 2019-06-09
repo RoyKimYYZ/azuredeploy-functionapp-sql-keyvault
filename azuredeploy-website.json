@@ -99,6 +99,17 @@
     },
     "resources": [
         {
+          "type": "Microsoft.Web/certificates",
+          "name": "[parameters('certificateName')]",
+          "apiVersion": "2016-03-01",
+          "location": "[parameters('location')]",
+          "properties": {
+            "keyVaultId": "[parameters('existingKeyVaultId')]",
+            "keyVaultSecretName": "[parameters('existingKeyVaultSecretName')]",
+            "serverFarmId": "[parameters('appserviceplanId')]"
+          }
+        },
+        {
             "apiVersion": "2018-02-01",
             "name": "[variables('webSiteName')]",
             "type": "Microsoft.Web/sites",
@@ -109,6 +120,9 @@
               "[concat('hidden-related:', parameters('hostingPlan'))]": "empty",
               "displayName": "Website"
             },
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/certificates', parameters('certificateName'))]"
+            ],
             "properties": {
               "name": "[variables('webSiteName')]",
               "serverFarmId": "[parameters('appserviceplanId')]",
@@ -125,7 +139,15 @@
                     "value": "[concat('Server=tcp:', parameters('dbfqdn'),',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
                   }
                 ]
-              }
+              },
+              "hostNameSslStates": [
+                {
+                  "name": "[parameters('customHostname')]",
+                  "sslState": "SniEnabled",
+                  "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]",
+                  "toUpdate": true
+                }
+              ]
             },
           "resources": [
               
@@ -168,37 +190,6 @@
               "domainId": null,
               "hostNameType": "Verified",
               "siteName": "parameters('websiteName')"
-            }
-          },
-          {
-            "type": "Microsoft.Web/certificates",
-            "name": "[parameters('certificateName')]",
-            "apiVersion": "2016-03-01",
-            "location": "[parameters('location')]",
-            "properties": {
-              "keyVaultId": "[parameters('existingKeyVaultId')]",
-              "keyVaultSecretName": "[parameters('existingKeyVaultSecretName')]",
-              "serverFarmId": "[parameters('appserviceplanId')]"
-            }
-          },
-          {
-            "type": "Microsoft.Web/sites",
-            "name": "[parameters('webAppName')]",
-            "apiVersion": "2016-03-01",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-              "[resourceId('Microsoft.Web/certificates', parameters('certificateName'))]"
-            ],
-            "properties": {
-              "name": "[parameters('webAppName')]",
-              "hostNameSslStates": [
-                {
-                  "name": "[parameters('customHostname')]",
-                  "sslState": "SniEnabled",
-                  "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]",
-                  "toUpdate": true
-                }
-              ]
             }
           }
     ],
