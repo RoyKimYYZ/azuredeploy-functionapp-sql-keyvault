@@ -33,7 +33,7 @@
       "value": "0f860f76-313b-4eb2-8912-a06b9e834a73"
     },
     "existingKeyVaultId": {
-      "value":  "rkimKeyVault"
+      "value":  "/subscriptions/de8b8186-01b8-4948-978f-f0dfd6a3655d/resourceGroups/Enterprise/providers/Microsoft.KeyVault/vaults/rkimKeyVault"
     },
     "existingKeyVaultSecretName": {
       "value": "rkima6ad04d2-fe30-4790-be33-e3f51383c902"
