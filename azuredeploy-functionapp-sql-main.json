@@ -197,6 +197,18 @@
     "metadata": {
       "description": "Specifies all secrets {\"secretName\":\"\",\"secretValue\":\"\"} wrapped in a secure object."
     }
+  },
+  "existingKeyVaultId" : {
+    "type": "string",
+    "metadata": {
+        "description": "Pre-existing Key Vault for source certs and secrets. Not the key vault for this application solution."
+    }    
+  },
+  "existingKeyVaultSecretName" : {
+    "type": "string",
+    "metadata": {
+        "description": "Pre-existing Key Vault secret for source certs and secrets. Not the key vault for this application solution."
+    }    
   }
 },
   "variables": {
@@ -347,10 +359,10 @@
             "value" : "[reference('linkedTemplate-appserviceplan').outputs.appserviceplan.value]"
           },
           "existingKeyVaultId": {
-              "value": "rkimKeyVault"
+              "value": "[parameters('existingKeyVaultId')]"
           },
           "existingKeyVaultSecretName": {
-              "value": "rkima6ad04d2-fe30-4790-be33-e3f51383c902"
+              "value": "[parameters('existingKeyVaultSecretName')]"
           }
       }
     }

@@ -108,7 +108,7 @@
           }
     },
 	"variables": {
-    "keyVaultName": "[concat(parameters('keyVaultName'), '')]"
+    "keyVaultName": "[concat(parameters('keyVaultName'), '-', uniqueString(resourceGroup().id))]"
   },
 	"resources": [
         {
