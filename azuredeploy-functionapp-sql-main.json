@@ -342,10 +342,16 @@
               },
               "secretName": "[variables('dbpasswordsecretName')]"
             }
-        },
+          },
           "appservicePlanId" : { 
             "value" : "[reference('linkedTemplate-appserviceplan').outputs.appserviceplan.value]"
-          }  
+          },
+          "existingKeyVaultId": {
+              "value": "rkimKeyVault"
+          },
+          "existingKeyVaultSecretName": {
+              "value": "rkima6ad04d2-fe30-4790-be33-e3f51383c902"
+          }
       }
     }
   }

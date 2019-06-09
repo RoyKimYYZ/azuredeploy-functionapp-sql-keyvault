@@ -31,51 +31,69 @@
               "description": "The branch of the GitHub repository to use."
             }
           },
-            "location": {
-                "type": "string",
-                "defaultValue": "Canada Central",
-                "metadata": {
-                "description": "Location for all resources."
-                }
-            },
-            "hostingPlan": {
-                "type": "string",
-                "defaultValue": "hostingPlanNameTBD",
-                "metadata": {
-                    "description": "Existing app service hosting plan name for this web site"
-                }
-            },
-            "dbfqdn": {
-                "type": "string",
-                "metadata": {
-                    "description": "Existing sql server fully qualified domain name"
-                }
-            },
-            "databaseName": {
-                "type": "string",
-                "metadata": {
-                    "description": "Existing database name"
-                }
-            },
-            "sqlAdministratorLogin": {
-                "type": "string",
-                "metadata": {
-                    "description": "Existing database sql admin login name"
-                }
-            },
-
-            "sqlAdministratorLoginPassword" : {
-                "type": "string",
-                "metadata": {
-                    "description": "Existing database sql admin password"
-                }
-            },
-            "appserviceplanId" : {
-                "type": "string",
-                "metadata": {
-                    "description": "Existing app service plan resource id"
-                }
+          "location": {
+              "type": "string",
+              "defaultValue": "Canada Central",
+              "metadata": {
+              "description": "Location for all resources."
+              }
+          },
+          "hostingPlan": {
+              "type": "string",
+              "defaultValue": "hostingPlanNameTBD",
+              "metadata": {
+                  "description": "Existing app service hosting plan name for this web site"
+              }
+          },
+          "appserviceplanId" : {
+              "type": "string",
+              "metadata": {
+                  "description": "Existing app service plan resource id"
+              }
+          },
+          "dbfqdn": {
+              "type": "string",
+              "metadata": {
+                  "description": "Existing sql server fully qualified domain name"
+              }
+          },
+          "databaseName": {
+              "type": "string",
+              "metadata": {
+                  "description": "Existing database name"
+              }
+          },
+          "sqlAdministratorLogin": {
+              "type": "string",
+              "metadata": {
+                  "description": "Existing database sql admin login name"
+              }
+          },
+          "sqlAdministratorLoginPassword" : {
+              "type": "string",
+              "metadata": {
+                  "description": "Existing database sql admin password"
+              }
+          },
+          "certificateName" : {
+            "type": "string",
+            "metadata": {
+                "description": "SSL certificate"
             }
+          },
+          "existingKeyVaultId" : {
+            "type": "string",
+            "metadata": {
+                "description": "Pre-existing Key Vault for source certs and secrets. Not the key vault for this application solution."
+            }    
+          },
+          "existingKeyVaultSecretName" : {
+            "type": "string",
+            "metadata": {
+                "description": "Pre-existing Key Vault secret for source certs and secrets. Not the key vault for this application solution."
+            }    
+          }
+        }
     },
     "variables": {
         "webSiteName": "[concat(parameters('webAppName'), '-', uniqueString(resourceGroup().id))]"
@@ -151,6 +169,37 @@
               "domainId": null,
               "hostNameType": "Verified",
               "siteName": "parameters('websiteName')"
+            }
+          },
+          {
+            "type": "Microsoft.Web/certificates",
+            "name": "[parameters('certificateName')]",
+            "apiVersion": "2016-03-01",
+            "location": "[parameters('location')]",
+            "properties": {
+              "keyVaultId": "[parameters('existingKeyVaultId')]",
+              "keyVaultSecretName": "[parameters('existingKeyVaultSecretName')]",
+              "serverFarmId": "[parameters('appserviceplanId')]"
+            }
+          },
+          {
+            "type": "Microsoft.Web/sites",
+            "name": "[parameters('webAppName')]",
+            "apiVersion": "2016-03-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/certificates', parameters('certificateName'))]"
+            ],
+            "properties": {
+              "name": "[parameters('webAppName')]",
+              "hostNameSslStates": [
+                {
+                  "name": "[parameters('customHostname')]",
+                  "sslState": "SniEnabled",
+                  "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]",
+                  "toUpdate": true
+                }
+              ]
             }
           }
     ],
