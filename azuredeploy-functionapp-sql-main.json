@@ -209,6 +209,12 @@
     "metadata": {
         "description": "Pre-existing Key Vault secret for source certs and secrets. Not the key vault for this application solution."
     }    
+  },
+  "certificateName" : {
+    "type": "string",
+    "metadata": {
+        "description": "Name given to certificate for TLS/SSL support for azure app service"
+    }    
   }
 },
   "variables": {
@@ -363,6 +369,9 @@
           },
           "existingKeyVaultSecretName": {
               "value": "[parameters('existingKeyVaultSecretName')]"
+          },
+          "certificateName": {
+            "value": "[parameters('certificateName')]"
           }
       }
     }

@@ -75,12 +75,6 @@
               "description": "Existing database sql admin password"
           }
       },
-      "certificateName" : {
-        "type": "string",
-        "metadata": {
-            "description": "SSL certificate"
-        }
-      },
       "existingKeyVaultId" : {
         "type": "string",
         "metadata": {
@@ -92,6 +86,12 @@
         "metadata": {
             "description": "Pre-existing Key Vault secret for source certs and secrets. Not the key vault for this application solution."
         }    
+      },
+      "certificateName" : {
+        "type": "string",
+        "metadata": {
+            "description": "SSL certificate"
+        }
       }
     },
     "variables": {
