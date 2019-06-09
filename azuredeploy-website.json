@@ -121,7 +121,7 @@
               "displayName": "Website"
             },
             "dependsOn": [
-              "[resourceId('Microsoft.Web/certificates', parameters('certificateName'))]"
+              "[concat('Microsoft.Web/certificates/', parameters('certificateName'))]"
             ],
             "properties": {
               "name": "[variables('webSiteName')]",
