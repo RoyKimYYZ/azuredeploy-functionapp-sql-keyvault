@@ -32,10 +32,10 @@
     "objectId": {
       "value": "0f860f76-313b-4eb2-8912-a06b9e834a73"
     },
-    "existingkeyVaultId": {
+    "existingKeyVaultId": {
       "value":  "rkimKeyVault"
     },
-    "existingkeyVaultSecretName": {
+    "existingKeyVaultSecretName": {
       "value": "rkima6ad04d2-fe30-4790-be33-e3f51383c902"
     }
 
