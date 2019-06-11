@@ -196,7 +196,7 @@
           },
           {
             "type": "Microsoft.Web/sites",
-            "name": "[concat('SSLBinding-',parameters('customHostname'))]",
+            "name": "[variables('webSiteName')]",
             "apiVersion": "2016-03-01",
             "location": "[resourceGroup().location]",
             "dependsOn": [
