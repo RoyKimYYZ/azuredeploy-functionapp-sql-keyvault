@@ -98,122 +98,102 @@
         "webSiteName": "[concat(parameters('webAppName'), '-', uniqueString(resourceGroup().id))]"
     },
     "resources": [
-        {
-          "type": "Microsoft.Web/certificates",
-          "name": "[parameters('certificateName')]",
-          "apiVersion": "2016-03-01",
+      {
+        "type": "Microsoft.Web/certificates",
+        "name": "[parameters('certificateName')]",
+        "apiVersion": "2016-03-01",
+        "location": "[parameters('location')]",
+        "properties": {
+          "keyVaultId": "[parameters('existingKeyVaultId')]",
+          "keyVaultSecretName": "[parameters('existingKeyVaultSecretName')]",
+          "serverFarmId": "[parameters('appserviceplanId')]"
+        }
+      },
+      {
+          "apiVersion": "2018-02-01",
+          "name": "[variables('webSiteName')]",
+          "type": "Microsoft.Web/sites",
+          "kind": "functionapp",
           "location": "[parameters('location')]",
+          "identity": { "type": "SystemAssigned" },
+          "tags": {
+            "[concat('hidden-related:', parameters('hostingPlan'))]": "empty",
+            "displayName": "Website"
+          },
+          "dependsOn": [
+            "[parameters('certificateName')]"
+          ],
           "properties": {
-            "keyVaultId": "[parameters('existingKeyVaultId')]",
-            "keyVaultSecretName": "[parameters('existingKeyVaultSecretName')]",
-            "serverFarmId": "[parameters('appserviceplanId')]"
-          }
-        },
-        {
-            "apiVersion": "2018-02-01",
             "name": "[variables('webSiteName')]",
-            "type": "Microsoft.Web/sites",
-            "kind": "functionapp",
-            "location": "[parameters('location')]",
-            "identity": { "type": "SystemAssigned" },
-            "tags": {
-              "[concat('hidden-related:', parameters('hostingPlan'))]": "empty",
-              "displayName": "Website"
-            },
-            "dependsOn": [
-              "[parameters('certificateName')]"
-            ],
-            "properties": {
-              "name": "[variables('webSiteName')]",
-              "serverFarmId": "[parameters('appserviceplanId')]",
-              "httpsOnly": true,
-              "siteConfig": {
-                "AlwaysOn": true,
-                "appSettings": [
-                  {
-                    "name": "FUNCTIONS_EXTENSION_VERSION",
-                    "value": "~1"
-                  },
-                  {
-                    "name": "DatabaseConnectionString",
-                    "value": "[concat('Server=tcp:', parameters('dbfqdn'),',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
-                  }
-                ]
-              },
-              "hostNameSslStates": [
+            "serverFarmId": "[parameters('appserviceplanId')]",
+            "httpsOnly": true,
+            "siteConfig": {
+              "AlwaysOn": true,
+              "appSettings": [
                 {
-                  "name": "[parameters('customHostname')]",
-                  "sslState": "SniEnabled",
-                  "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]",
-                  "toUpdate": true
+                  "name": "FUNCTIONS_EXTENSION_VERSION",
+                  "value": "~1"
+                },
+                {
+                  "name": "DatabaseConnectionString",
+                  "value": "[concat('Server=tcp:', parameters('dbfqdn'),',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
                 }
               ]
             },
-          "resources": [
-              
+            "hostNameSslStates": [
               {
-                "apiVersion": "2018-02-01",
-                "type": "config",
-                "name": "connectionstrings",
-                "dependsOn": [
-                  "[variables('webSiteName')]"
-                ],
-                "properties": {
-                  "DefaultConnection": {
-                    "value": "[concat('Server=tcp:', parameters('dbfqdn'),',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
-                    "type": "SQLAzure"
-                  }
-                }
-              },
-              {
-                "apiVersion": "2015-08-01",
-                "name": "web",
-                "type": "sourcecontrols",
-                "dependsOn": [
-                  "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
-                ],
-                "properties": {
-                  "RepoUrl": "[parameters('repoURL')]",
-                  "branch": "[parameters('branch')]",
-                  "IsManualIntegration": true
-                }
+                "name": "[parameters('customHostname')]",
+                "sslState": "SniEnabled",
+                "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]",
+                "toUpdate": true
               }
             ]
           },
-          {
-            "apiVersion": "2015-08-01",
-            "name": "[concat(variables('websiteName'),'/',parameters('customHostname'))]",
-            "type": "Microsoft.Web/sites/hostNameBindings",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-              "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
-            ],
-            "properties": {
-              "domainId": null,
-              "hostNameType": "Verified",
-              "siteName": "parameters('websiteName')"
-            }
-          },
-          {
-            "type": "Microsoft.Web/sites",
-            "name": "[variables('webSiteName')]",
-            "apiVersion": "2016-03-01",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-              "[concat('Microsoft.Web/sites/hostNameBindings/',variables('websiteName'),'/',parameters('customHostname'))]"
-            ],
-            "properties": {
-              "name": "[variables('webSiteName')]",
-              "hostNameSslStates": [
-                {
-                  "name": "[parameters('customHostname')]",
-                  "sslState": "SniEnabled",
-                  "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]",
-                  "toUpdate": true
+        "resources": [
+            
+            {
+              "apiVersion": "2018-02-01",
+              "type": "config",
+              "name": "connectionstrings",
+              "dependsOn": [
+                "[variables('webSiteName')]"
+              ],
+              "properties": {
+                "DefaultConnection": {
+                  "value": "[concat('Server=tcp:', parameters('dbfqdn'),',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User Id=', parameters('sqlAdministratorLogin'), ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
+                  "type": "SQLAzure"
                 }
-              ]
+              }
+            },
+            {
+              "apiVersion": "2015-08-01",
+              "name": "web",
+              "type": "sourcecontrols",
+              "dependsOn": [
+                "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
+              ],
+              "properties": {
+                "RepoUrl": "[parameters('repoURL')]",
+                "branch": "[parameters('branch')]",
+                "IsManualIntegration": true
+              }
             }
-          }
+          ]
+      },
+      {
+        "apiVersion": "2015-08-01",
+        "name": "[concat(variables('websiteName'),'/',parameters('customHostname'))]",
+        "type": "Microsoft.Web/sites/hostNameBindings",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
+        ],
+        "properties": {
+          "domainId": null,
+          "hostNameType": "Verified",
+          "siteName": "parameters('websiteName')"
+        }
+      }
 
     ],
     "outputs": {
