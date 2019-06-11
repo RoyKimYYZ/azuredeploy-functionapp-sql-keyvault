@@ -193,26 +193,6 @@
               "hostNameType": "Verified",
               "siteName": "parameters('websiteName')"
             }
-          },
-          {
-            "type": "Microsoft.Web/sites",
-            "name": "[concat(variables('websiteName'),'/',parameters('customHostname'))]",
-            "apiVersion": "2016-03-01",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-              "[resourceId('Microsoft.Web/sites/hostNameBindings', parameters('customHostname'))]"
-            ],
-            "properties": {
-              "name": "[variables('webSiteName')]",
-              "hostNameSslStates": [
-                {
-                  "name": "[parameters('customHostname')]",
-                  "sslState": "SniEnabled",
-                  "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]",
-                  "toUpdate": true
-                }
-              ]
-            }
           }
 
     ],
