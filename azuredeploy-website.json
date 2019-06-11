@@ -200,7 +200,7 @@
             "apiVersion": "2016-03-01",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-              "[concat(variables('websiteName'),'/',parameters('customHostname'))]"
+              "[concat('Microsoft.Web/sites/hostNameBindings',variables('websiteName'),'/',parameters('customHostname'))]"
             ],
             "properties": {
               "name": "[variables('webSiteName')]",
