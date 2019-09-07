@@ -295,9 +295,9 @@
     }
   },
   {
-    "apiVersion": "2018-05-01",
     "name": "linkedTemplate-appserviceplan",
     "type": "Microsoft.Resources/deployments",
+    "apiVersion": "2018-05-01",
     "properties": {
         "mode": "incremental",
         "templateLink": {
