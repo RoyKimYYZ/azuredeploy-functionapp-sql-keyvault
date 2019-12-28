@@ -112,7 +112,7 @@
           "keyVaultSecretName": "[parameters('existingKeyVaultSecretName')]",
           "serverFarmId": "[parameters('appserviceplanId')]"
         }
-      },
+      }, 
       {
           "type": "Microsoft.KeyVault/vaults",
           "apiVersion": "2018-02-14",
