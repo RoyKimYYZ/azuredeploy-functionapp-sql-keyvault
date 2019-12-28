@@ -1,4 +1,5 @@
-Import-Module Az
+Install-Module Az -Force
+Import-Module Az 
 
 Connect-AzAccount
 Get-AzContext
@@ -17,7 +18,9 @@ $resourceGroupName = "rkfunctionapp-sql"
 New-AzResourceGroup -Name $resourceGroupName  -Location "Canada Central" -Force 
 
 # Just validates the json file from github
-Test-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateUri 'https://raw.githubusercontent.com/RoyKimYYZ/azuredeploy-functionapp-sql-keyvault/master/azuredeploy-functionapp-sql-main.json' -TemplateParameterUri 'https://raw.githubusercontent.com/RoyKimYYZ/azuredeploy-functionapp-sql-keyvault/master/azuredeploy-functionappsql.paramaters.json'
+Test-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName `
+-TemplateUri 'https://raw.githubusercontent.com/RoyKimYYZ/azuredeploy-functionapp-sql-keyvault/master/azuredeploy-functionapp-sql-main.json' `
+-TemplateParameterUri 'https://raw.githubusercontent.com/RoyKimYYZ/azuredeploy-functionapp-sql-keyvault/master/azuredeploy-functionappsql.paramaters.json'
 
 Remove-AzResourceGroup $resourceGroupName -Force
 New-AzResourceGroup -Name $resourceGroupName  -Location "Canada Central" -Force 
