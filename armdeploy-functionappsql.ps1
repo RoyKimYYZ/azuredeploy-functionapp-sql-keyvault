@@ -14,7 +14,7 @@ Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -Scope Process
 $Provider=Get-AzResourceProvider | Format-Table 
 $Provider.ResourceTypes
 #####
-$resourceGroupName = "rkfunctionapp-sql"
+$resourceGroupName = "rkfunctionapp-sql" 
 New-AzResourceGroup -Name $resourceGroupName  -Location "Canada Central" -Force 
 
 # Just validates the json file from github
